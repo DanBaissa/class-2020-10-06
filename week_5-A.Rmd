@@ -13,7 +13,40 @@ library(tidyverse)
 
 **Prompt:** Create a graphic of the posterior distribution of the [538 forecast](https://projects.fivethirtyeight.com/2020-election-forecast/) for Biden's electoral vote total. Recall the example given in Chapter 5 of *The Primer*.
 
+```{r sc1}
+x <- read_csv("https://projects.fivethirtyeight.com/2020-general-data/presidential_ev_probabilities_2020.csv",
+              col_types = cols(cycle = col_double(),
+                               branch = col_character(),
+                               model = col_character(),
+                               modeldate = col_character(),
+                               candidate_inc = col_character(),
+                               candidate_chal = col_character(),
+                               candidate_3rd = col_logical(),
+                               evprob_inc = col_double(),
+                               evprob_chal = col_double(),
+                               evprob_3rd = col_logical(),
+                               total_ev = col_double(),
+                               timestamp = col_character(),
+                               simulations = col_double()))
 
+# Note that the default col_types given as part of the warning message may not
+# be correct. Look at your work! Don't just trust the machine! For example, does
+# it really make sense for candidate_3rd to be logical? No! This should be the
+# name (character) of the main 3rd party candidate. Why is it logical? Because
+# it is missing in all rows. Still, it wopuld be better to edit this so that it
+# was col_character().
+
+x %>% 
+  ggplot(aes(total_ev, evprob_chal)) +
+  geom_bar(stat = 'identity') +
+  labs(title = "Posterior Probability Distribution Based on FiveThirtyEight Forecast",
+       subtitle = "Presidential Elections",
+       y = "Probability",
+       x = "Outcome\nElectoral Vote Total for Democratic Candidate",
+       caption = "Data from October 3, 2020") +
+  theme_classic()
+
+```
 
 ### Scene 2
 
